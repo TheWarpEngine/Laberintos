@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f5f3ee" />
+  <title>Laberintos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell" aria-label="Juego de laberintos">
+    <header class="topbar">
+      <div class="level-dots" id="levelDots" aria-label="Progreso"></div>
+
+      <button class="icon-button" id="soundButton" type="button" aria-label="Activar o desactivar sonidos">
+        <span id="soundIcon" aria-hidden="true">🔊</span>
+      </button>
+    </header>
+
+    <section class="maze-card" aria-label="Laberinto">
+      <div id="maze" class="maze" role="application" aria-label="Laberinto interactivo"></div>
+
+      <div id="celebration" class="celebration" aria-live="polite" aria-hidden="true">
+        <div class="celebration-hand" aria-hidden="true">👍</div>
+        <button id="nextButton" class="next-button" type="button" aria-label="Siguiente nivel">
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Controles de movimiento">
+      <button class="move-button up" data-direction="up" type="button" aria-label="Mover arriba">▲</button>
+      <button class="move-button left" data-direction="left" type="button" aria-label="Mover izquierda">◀</button>
+      <button class="move-button right" data-direction="right" type="button" aria-label="Mover derecha">▶</button>
+      <button class="move-button down" data-direction="down" type="button" aria-label="Mover abajo">▼</button>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>

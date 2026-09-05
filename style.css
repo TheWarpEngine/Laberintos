@@ -1,0 +1,356 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --ink: #262626;
+  --muted: #8a8a84;
+  --wall: #3c3c3a;
+  --path: #fbfaf7;
+  --control: #ece9e1;
+  --control-active: #ded9ce;
+  --accent: #56636f;
+  --cell-size: 56px;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+  touch-action: manipulation;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+}
+
+.game-shell {
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding:
+    max(14px, env(safe-area-inset-top))
+    14px
+    max(18px, env(safe-area-inset-bottom));
+}
+
+.topbar {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.level-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.level-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #d5d2ca;
+}
+
+.level-dot.completed {
+  background: #8d969c;
+}
+
+.level-dot.current {
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+}
+
+.icon-button,
+.next-button,
+.move-button {
+  border: 0;
+  cursor: pointer;
+  color: var(--ink);
+  background: var(--control);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.icon-button:active,
+.next-button:active,
+.move-button:active {
+  background: var(--control-active);
+  transform: scale(0.96);
+}
+
+.icon-button {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  font-size: 19px;
+}
+
+.maze-card {
+  position: relative;
+  width: 100%;
+  margin-top: 6px;
+  display: grid;
+  place-items: center;
+}
+
+.maze {
+  display: grid;
+  width: fit-content;
+  max-width: 100%;
+  background: var(--wall);
+  border: 4px solid var(--wall);
+  border-radius: 16px;
+  overflow: hidden;
+  touch-action: none;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.06);
+}
+
+.cell {
+  position: relative;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background: var(--path);
+}
+
+.cell.wall-top {
+  border-top: 3px solid var(--wall);
+}
+
+.cell.wall-right {
+  border-right: 3px solid var(--wall);
+}
+
+.cell.wall-bottom {
+  border-bottom: 3px solid var(--wall);
+}
+
+.cell.wall-left {
+  border-left: 3px solid var(--wall);
+}
+
+.goal {
+  position: absolute;
+  inset: 15%;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--cell-size) * 0.52);
+  line-height: 1;
+}
+
+.collectible {
+  position: absolute;
+  inset: 20%;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--cell-size) * 0.42);
+  line-height: 1;
+}
+
+.robot {
+  position: absolute;
+  z-index: 4;
+  width: 66%;
+  height: 66%;
+  left: 17%;
+  top: 17%;
+  transition:
+    transform 130ms ease,
+    opacity 130ms ease;
+  pointer-events: none;
+}
+
+.robot-body {
+  position: absolute;
+  width: 62%;
+  height: 55%;
+  left: 19%;
+  top: 30%;
+  border: 3px solid #34383b;
+  border-radius: 24%;
+  background: #d8dde0;
+}
+
+.robot-head {
+  position: absolute;
+  width: 55%;
+  height: 42%;
+  left: 22.5%;
+  top: 5%;
+  border: 3px solid #34383b;
+  border-radius: 30%;
+  background: #eef1f2;
+}
+
+.robot-eye {
+  position: absolute;
+  width: 10%;
+  aspect-ratio: 1;
+  top: 22%;
+  border-radius: 50%;
+  background: #34383b;
+}
+
+.robot-eye.left-eye {
+  left: 37%;
+}
+
+.robot-eye.right-eye {
+  right: 37%;
+}
+
+.robot-antenna {
+  position: absolute;
+  width: 3px;
+  height: 18%;
+  left: calc(50% - 1.5px);
+  top: -10%;
+  background: #34383b;
+}
+
+.robot-antenna::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  left: -2px;
+  top: -4px;
+  border-radius: 50%;
+  background: #34383b;
+}
+
+.robot.bump {
+  animation: bump 190ms ease;
+}
+
+.robot.step {
+  animation: step 140ms ease;
+}
+
+.robot.has-item .robot-body::after {
+  content: "";
+  position: absolute;
+  width: 22%;
+  aspect-ratio: 1;
+  right: 7%;
+  bottom: 9%;
+  border-radius: 50%;
+  background: #788894;
+}
+
+@keyframes bump {
+  0%, 100% { transform: translateX(0); }
+  35% { transform: translateX(-4px); }
+  70% { transform: translateX(3px); }
+}
+
+@keyframes step {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.controls {
+  margin: 20px auto 0;
+  width: 210px;
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  grid-template-rows: repeat(2, 64px);
+  gap: 9px;
+  justify-content: center;
+  grid-template-areas:
+    ". up ."
+    "left down right";
+}
+
+.move-button {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.move-button.up { grid-area: up; }
+.move-button.left { grid-area: left; }
+.move-button.right { grid-area: right; }
+.move-button.down { grid-area: down; }
+
+.celebration {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  place-items: center;
+  align-content: center;
+  gap: 20px;
+  border-radius: 16px;
+  background: rgba(245, 243, 238, 0.91);
+  backdrop-filter: blur(2px);
+}
+
+.celebration.show {
+  display: grid;
+  animation: appear 220ms ease-out;
+}
+
+.celebration-hand {
+  font-size: clamp(56px, 18vw, 86px);
+  animation: gentle-pop 400ms ease-out;
+}
+
+.next-button {
+  width: 74px;
+  height: 58px;
+  border-radius: 18px;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+@keyframes appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gentle-pop {
+  0% { transform: scale(0.8); }
+  70% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+@media (max-width: 380px) {
+  .game-shell {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .controls {
+    margin-top: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
